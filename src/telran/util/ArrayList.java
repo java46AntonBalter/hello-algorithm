@@ -18,8 +18,7 @@ public class ArrayList<T> implements List<T> {
 		this(DEFAULT_CAPACITY);
 	}
 
-	@SuppressWarnings("hiding")
-	private class ArrayListIterator<T> implements Iterator<T> {
+	private class ArrayListIterator implements Iterator<T> {
 		int current = 0;
 
 		@Override
@@ -27,7 +26,6 @@ public class ArrayList<T> implements List<T> {
 			return current < array.length ? true : false;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public T next() {
 			return !hasNext() ? null : (T) array[current++];
@@ -90,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public Iterator<T> iterator() {
 
-		return new ArrayListIterator<>();
+		return new ArrayListIterator();
 	}
 
 	@Override
