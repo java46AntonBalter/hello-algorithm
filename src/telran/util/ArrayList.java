@@ -44,15 +44,14 @@ public class ArrayList<T> implements List<T> {
 
 	@Override
 	public boolean remove(Object pattern) {
-		boolean flRemoved = false;
 		for (int i = 0; i < size; i++) {
 			if (array[i] == pattern) {
 				System.arraycopy(array, i + 1, array, i, (size--) - (i + 1));
 				array[size] = null;
-				flRemoved = true;
+				return true;
 			}
 		}
-		return flRemoved;
+		return false;
 	}
 
 	@Override
