@@ -13,9 +13,10 @@ abstract class ListTests extends CollectionTests {
 
 	List<Integer> list;
 	@BeforeEach
+	@Override
 	void setUp() throws Exception {
 		super.setUp(); // content of the collection is {10, -5, 13, 20, 40, 15} from the setup 
-		list = (List<Integer>)collection;
+		list = (List<Integer>)collection; //
 	}
 
 	@Test
