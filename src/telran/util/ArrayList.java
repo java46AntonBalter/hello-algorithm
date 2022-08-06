@@ -150,12 +150,6 @@ boolean flNext = false;
 	}
 	@Override
 	public boolean removeIf (Predicate<T> predicate) {
-		//TODO
-		//Write the method for removing all objects matching the given 
-		//predicate with O[N]
-		//bonus: with no additional array (playing with two indexes)
-		//take into consideration a possible memory leak (reference from index == size should be null's)
-		
 		int sizeOld = size();
 		Iterator<T> it = new ArrayListIterator();
 		while(it.hasNext()) {
