@@ -19,6 +19,7 @@ public class LinkedList<T> implements List<T> {
 	
 	private class LinkedListIterator implements Iterator<T> {
 		Node<T> current = head;
+		boolean flNext = false;
 		@Override
 		public boolean hasNext() {
 			
@@ -32,13 +33,30 @@ public class LinkedList<T> implements List<T> {
 			}
 			T res = current.obj;
 			current = current.next;
+			flNext = true;
 			return res;
+		}
+		@Override
+		public void remove() {
+			if (!flNext) {
+				throw new IllegalStateException();
+			}
+			if (current == null) {
+				removeNode(tail);
+			} else {
+				removeNode(current.prev);
+			}
+			flNext = false;
+			
 		}
 		
 	}
 
 	@Override
 	public boolean add(T obj) {
+		if (obj == null) {
+			throw new NullPointerException();
+		}
 		Node<T> newNode = new Node<>(obj);
 		if (head == null) {
 			head = tail = newNode;
@@ -100,16 +118,7 @@ public class LinkedList<T> implements List<T> {
 		
 	}
 
-	@Override
-	public boolean removeIf(Predicate<T> predicate) {
-		int sizeOld = size;
-		for (Node<T> current = head; current != null; current = current.next) {
-			if (predicate.test(current.obj)) {
-				removeNode(current);
-			}
-		}
-		return sizeOld > size;
-	}
+	
 
 	
 
@@ -127,6 +136,9 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public boolean add(int index, T obj) {
+		if (obj == null) {
+			throw new NullPointerException();
+		}
 		boolean res = false;
 		if (index >=0 && index <= size) {
 			res = true;
@@ -142,7 +154,6 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private void addIndex(int index, T obj) {
-		size++;
 		Node<T> newNode = new Node<>(obj);
 		Node<T> afterNode = getNodeIndex(index);
 		Node<T> beforeNode = afterNode.prev;
@@ -150,6 +161,7 @@ public class LinkedList<T> implements List<T> {
 		afterNode.prev = newNode;
 		beforeNode.next = newNode;
 		newNode.prev = beforeNode;
+		size++;
 		
 	}
 
@@ -234,6 +246,14 @@ public class LinkedList<T> implements List<T> {
 			res = node.obj;
 		}
 		return res;
+	}
+	/**
+	 * performs reversing of the objects order
+	 * current - {10, -5, 30} - after reverse - {30, -5. 10}
+	 */
+	public void reverse() {
+		//TODO write implementation
+		//TODO write test (Think where there should be test for the method reverse)
 	}
 
 }

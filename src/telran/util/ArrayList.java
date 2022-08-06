@@ -16,6 +16,7 @@ public ArrayList() {
 }
 private class ArrayListIterator implements Iterator<T> {
 int currentInd = 0;
+boolean flNext = false;
 	@Override
 	public boolean hasNext() {
 		
@@ -24,8 +25,16 @@ int currentInd = 0;
 
 	@Override
 	public T next() {
-		
+		flNext = true;
 		return  array[currentInd++];
+	}
+	@Override 
+	public void remove() {
+		if(!flNext) {
+			throw new IllegalStateException();
+		}
+		ArrayList.this.remove(--currentInd);
+		flNext = false;
 	}
 	
 }
@@ -57,21 +66,11 @@ int currentInd = 0;
 	private void removeByIndex(int index) {
 		size--;
 		System.arraycopy(array, index+1, array, index, size - index);
+		//array[size] == array[size - 1] => Memory leak
+		array[size] = null; //solution for preventing memory leak;
 	}
 
-	@Override
-	public boolean removeIf(Predicate<T> predicate) {
-		int sizeOld = size;
-		int i = 0;
-		while (i < size) {
-			if (predicate.test(array[i])) {
-				removeByIndex(i);
-			} else {
-				i++;
-			}
-		}
-		return sizeOld > size;
-	}
+	
 
 	
 
@@ -147,6 +146,15 @@ int currentInd = 0;
 	public T get(int index) {
 		
 		return checkExistingIndex(index) ? array[index] : null;
+	}
+	@Override
+	public boolean removeIf (Predicate<T> predicate) {
+		//TODO
+		//Write the method for removing all objects matching the given 
+		//predicate with O[N]
+		//bonus: with no additional array (playing with two indexes)
+		//take into consideration a possible memory leak (reference from index == size should be null's)
+		return false;
 	}
 
 }

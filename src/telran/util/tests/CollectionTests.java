@@ -3,6 +3,7 @@ package telran.util.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -84,6 +85,25 @@ abstract class CollectionTests {
 	@Test
 	void sizeTest() {
 		assertEquals(expected.length, collection.size());
+	}
+	@Test
+	void wrongIteratorRemoveTest() {
+		Iterator<Integer> it = collection.iterator();
+		wrongRemove(it); //first remove
+		it.next();
+		it.next();
+		it.remove(); //two removes with no next
+		wrongRemove(it);
+	}
+
+	protected  void wrongRemove(Iterator<Integer> it) {
+		boolean flException = false;
+		try {
+			it.remove();
+		} catch (IllegalStateException e) {
+			flException = true;
+		}
+		assertTrue(flException);
 	}
 
 }
