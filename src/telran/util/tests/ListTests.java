@@ -1,12 +1,12 @@
 package telran.util.tests;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import telran.util.LinkedList;
 import telran.util.List;
 
 abstract class ListTests extends CollectionTests {
@@ -63,5 +63,7 @@ abstract class ListTests extends CollectionTests {
 		assertEquals(list.size() - 1, list.lastIndexOf(10));
 		assertEquals(-1, list.lastIndexOf(-10));
 	}
-
+	
+	
+	
 }

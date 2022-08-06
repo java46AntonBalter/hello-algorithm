@@ -3,6 +3,7 @@ package telran.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Predicate;
+
 public class ArrayList<T> implements List<T> {
 private static final int DEFAULT_CAPACITY = 16;
 private T[] array;
@@ -154,7 +155,16 @@ boolean flNext = false;
 		//predicate with O[N]
 		//bonus: with no additional array (playing with two indexes)
 		//take into consideration a possible memory leak (reference from index == size should be null's)
-		return false;
+		
+		int sizeOld = size();
+		Iterator<T> it = new ArrayListIterator();
+		while(it.hasNext()) {
+			T obj = it.next();
+			if (predicate.test(obj)) {
+				it.remove();
+			}
+		}
+		return sizeOld > size();
 	}
 
 }
