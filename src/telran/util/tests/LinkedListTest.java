@@ -21,8 +21,8 @@ public class LinkedListTest extends ListTests {
 		LinkedList<Integer> linkedList = (LinkedList<Integer>)collection;;
 		Integer expected1[] = { 15, 40, 20, 13, -5, 10 };
 		linkedList.reverse();
-		Integer[] arr = {};
-		Integer[] res = linkedList.toArray(arr); 
+		Integer[] res = {};
+		res = linkedList.toArray(res); 
 		assertArrayEquals(expected1, res);
 	}
 	
