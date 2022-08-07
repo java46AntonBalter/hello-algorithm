@@ -149,15 +149,19 @@ boolean flNext = false;
 		return checkExistingIndex(index) ? array[index] : null;
 	}
 	@Override
-	public boolean removeIf (Predicate<T> predicate) {
-		int sizeOld = size();
-		Iterator<T> it = new ArrayListIterator();
-		while(it.hasNext()) {
-			T obj = it.next();
-			if (predicate.test(obj)) {
-				it.remove();
+	public boolean removeIf (Predicate<T> predicate) {		
+		int sizeOld = size();		
+		int count = 0;
+		for(int i = 0; i < sizeOld; i++) {
+			if (predicate.test(array[i])) {
+				array[i] = array[i+1];
+				count++;
+			} else if(i-1 >=0 &&  array[i].equals(array[i-1])) {
+				array[i] = array[i+1];
+				i--;
 			}
 		}
+		size = size - count;
 		return sizeOld > size();
 	}
 
