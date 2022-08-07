@@ -159,12 +159,6 @@ public class ArrayList<T> implements List<T> {
 		return sizeOld > filterOutByPredicate(predicate, sizeOld);
 	}
 
-	private void removeGarbage(int sizeOld) {
-		for (int i = size; i < sizeOld; i++) {
-			array[i] = null; // hello garbage collector >-_[@-@]_-<
-		}
-	}
-
 	private int filterOutByPredicate(Predicate<T> predicate, int sizeOld) {
 		int count = 0;
 		for (int i = 0; i < sizeOld; i++) {
@@ -178,6 +172,12 @@ public class ArrayList<T> implements List<T> {
 		size = size - count;
 		removeGarbage(sizeOld);
 		return size;
+	}
+	
+	private void removeGarbage(int sizeOld) {
+		for (int i = size; i < sizeOld; i++) {
+			array[i] = null; // hello garbage collector >-_[@-@]_-<
+		}
 	}
 
 }
