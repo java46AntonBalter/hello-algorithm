@@ -157,11 +157,13 @@ boolean flNext = false;
 				array[i] = array[i+1];
 				count++;
 			} else if(i-1 >=0 &&  array[i].equals(array[i-1])) {
-				array[i] = array[i+1];
-				i--;
+				array[i--] = array[i+1];				
 			}
 		}
 		size = size - count;
+		for(int i = size; i < sizeOld; i++) {
+			array[i]
+		}
 		return sizeOld > size();
 	}
 
