@@ -72,8 +72,6 @@ public class HashSet<T> implements Set<T> {
 						currentIndex = i;
 						return true;
 					}
-					currentIndex++;
-					childIt = null;
 				}
 				currentIndex = i + 1;
 				childIt = null;
