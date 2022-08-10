@@ -23,8 +23,7 @@ public class HashSetTests extends SetTests {
 	@Override
 	@Test
 	void toArrayTest() {
-		Integer expected1[] = { 10, -5, 13, 20, 40, 15 };
-		Arrays.sort(expected1);
+		Integer expected1[] = { -5, 10 , 13, 15, 20, 40 };
 		Integer[] res = collection.toArray(new Integer[0]);
 		Arrays.sort(res);
 		assertArrayEquals(expected1, res);
