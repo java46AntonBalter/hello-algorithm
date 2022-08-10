@@ -70,6 +70,10 @@ public class HashSet<T> implements Set<T> {
 					while (childIt.hasNext()) {
 						currObj = childIt.next();
 						currentIndex = i;
+						if(!childIt.hasNext()) {
+							currentIndex = i+1;
+							childIt = null;
+						}						
 						return true;
 					}
 				}
