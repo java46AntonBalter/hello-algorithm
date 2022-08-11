@@ -4,36 +4,35 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class HashSet<T> implements Set<T> {
-	private static final double DEFAULT_FACTOR = 0.75;
-	private static final int DEFAULT_HASH_TABLE_CAPACITY = 16;
-	private List<T>[] hashTable;
-	private int size;
-	private double factor;
+private static final double DEFAULT_FACTOR = 0.75;
+private static final int DEFAULT_HASH_TABLE_CAPACITY = 16;
+private List<T> [] hashTable;
+private int size;
+private double factor ;
+@SuppressWarnings("unchecked")
+public HashSet(int hashTableCapacity, double factor) {
+	this.factor = factor;
+	hashTable = new List[hashTableCapacity];
+}
+public HashSet(int hashTableCapacity) {
+	this(hashTableCapacity, DEFAULT_FACTOR);
+}
+public HashSet() {
+	this(DEFAULT_HASH_TABLE_CAPACITY, DEFAULT_FACTOR);
+}
 
-	@SuppressWarnings("unchecked")
-	public HashSet(int hashTableCapacity, double factor) {
-		this.factor = factor;
-		hashTable = new List[hashTableCapacity];
+private class HashSetIterator implements Iterator<T> {
+	Iterator<T> currentIterator;
+	Iterator<T> prevIterator;
+	int indexIterator = 0;
+	boolean flNext = false;
+	HashSetIterator() {
+
+		getCurrentIterator();
 	}
-
-	public HashSet(int hashTableCapacity) {
-		this(hashTableCapacity, DEFAULT_FACTOR);
-	}
-
-	public HashSet() {
-		this(DEFAULT_HASH_TABLE_CAPACITY, DEFAULT_FACTOR);
-	}
-
-	private class HashSetIterator implements Iterator<T> {
-//TODO
-		private T currObj;
-		private int currentIndex = 0;
-		private boolean flNext = false;
-		private Iterator<T> childIt;
-
 		@Override
 		public boolean hasNext() {
-			return currentIndex < hashTable.length;
+			return currentIterator != null;
 		}
 
 		@Override
@@ -41,49 +40,50 @@ public class HashSet<T> implements Set<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
+			T res = currentIterator.next();
+			prevIterator = currentIterator;
+			getCurrentIterator();
 			flNext = true;
-			getCurrentObject();
-			return currObj;
+			return res;
+		}
+		private void getCurrentIterator() {
+			if (currentIterator == null || !currentIterator.hasNext()) {
+				Iterator<T> it = null;
+				while(it == null || !it.hasNext()) {
+					
+					List<T> list = getList();
+					indexIterator++;
+					
+					if (list == null) {
+						currentIterator = null;
+						return;
+					}
+					it = list.iterator();
+				}
+				currentIterator = it;
+			}
+			
+		}
+
+		private List<T> getList() {
+			while(indexIterator < hashTable.length &&
+					hashTable[indexIterator] == null) {
+				indexIterator++;
+			}
+			return indexIterator < hashTable.length ?
+					hashTable[indexIterator] : null;
 		}
 
 		@Override
 		public void remove() {
-			if (!flNext) {
+			if(!flNext) {
 				throw new IllegalStateException();
 			}
-			int currHashTableIndex = getHashTableIndex(currObj.hashCode());
-			if (hashTable[currHashTableIndex] != null) {
-				HashSet.this.remove(currObj);
-				if (hashTable[currHashTableIndex].size() == 0) {
-					hashTable[currHashTableIndex] = null;
-				}
-			}
+			prevIterator.remove();
 			flNext = false;
+			size--;
 		}
-
-		private boolean getCurrentObject() {
-			for (int i = currentIndex; i < hashTable.length; i++) {
-				if (hashTable[i] != null) {
-					if (childIt == null) {
-						childIt = hashTable[i].iterator();
-					}
-					while (childIt.hasNext()) {
-						currObj = childIt.next();
-						currentIndex = i;
-						if(!childIt.hasNext()) {
-							currentIndex = i+1;
-							childIt = null;
-						}						
-						return true;
-					}
-				}
-				currentIndex = i + 1;
-				childIt = null;
-			}
-			return false;
-		}
-	}
-
+}
 	@Override
 	public boolean add(T obj) {
 		// set can not have two equal objects
@@ -93,7 +93,7 @@ public class HashSet<T> implements Set<T> {
 			res = true;
 			if (size >= hashTable.length * factor) {
 				recreateHashTable();
-			}
+			} 
 			int hashTableInd = getHashTableIndex(obj.hashCode());
 			if (hashTable[hashTableInd] == null) {
 				hashTable[hashTableInd] = new LinkedList<T>();
@@ -105,10 +105,10 @@ public class HashSet<T> implements Set<T> {
 	}
 
 	private void recreateHashTable() {
-		HashSet<T> tmp = new HashSet<>(hashTable.length * 2); // tmp hashset has table with twice capacity
-		for (List<T> list : hashTable) {
+		HashSet<T> tmp = new HashSet<>(hashTable.length * 2); //tmp hashset has table with twice capacity
+		for (List<T> list: hashTable) {
 			if (list != null) {
-				for (T obj : list) {
+				for(T obj: list) {
 					tmp.add(obj);
 				}
 			}
@@ -146,13 +146,13 @@ public class HashSet<T> implements Set<T> {
 
 	@Override
 	public int size() {
-
+		
 		return size;
 	}
 
 	@Override
 	public Iterator<T> iterator() {
-
+		
 		return new HashSetIterator();
 	}
 

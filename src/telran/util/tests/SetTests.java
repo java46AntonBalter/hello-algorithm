@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-
+import telran.util.Collection;
 
 public abstract class SetTests extends CollectionTests {
 
