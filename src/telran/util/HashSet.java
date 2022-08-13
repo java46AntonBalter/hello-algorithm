@@ -50,10 +50,8 @@ private class HashSetIterator implements Iterator<T> {
 			if (currentIterator == null || !currentIterator.hasNext()) {
 				Iterator<T> it = null;
 				while(it == null || !it.hasNext()) {
-					
 					List<T> list = getList();
 					indexIterator++;
-					
 					if (list == null) {
 						currentIterator = null;
 						return;
@@ -62,7 +60,6 @@ private class HashSetIterator implements Iterator<T> {
 				}
 				currentIterator = it;
 			}
-			
 		}
 
 		private List<T> getList() {
