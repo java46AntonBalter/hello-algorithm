@@ -30,7 +30,7 @@ public class TreeSet<T> implements SortedSet<T> {
 	private class TreeSetIterator implements Iterator<T> {
 		Node<T> current = root == null ? null : getLeastNodeFrom(root);
 		boolean flNext;
-		T prevValue;
+		Node<T> prevNode;
 
 		@Override
 		public boolean hasNext() {
@@ -43,10 +43,10 @@ public class TreeSet<T> implements SortedSet<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
-			prevValue = current.obj;
+			prevNode = current;
 			updateCurrent();
 			flNext = true;
-			return prevValue;
+			return prevNode.obj;
 		}
 
 		private void updateCurrent() {
@@ -67,7 +67,11 @@ public class TreeSet<T> implements SortedSet<T> {
 			if (!flNext) {
 				throw new IllegalStateException();
 			}
-			TreeSet.this.remove(prevValue);
+			boolean isJunction = isJunction(prevNode);
+			TreeSet.this.remove(prevNode.obj);
+			if(isJunction) {
+				prevNode = current;
+			}
 			flNext = false;
 		}
 
@@ -120,20 +124,28 @@ public class TreeSet<T> implements SortedSet<T> {
 		return parent;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove(Object pattern) {
+		Node<T> nodeToRemove = findNodeToRemove(pattern);
+		if(nodeToRemove != null) {
+			removeNode(nodeToRemove); 
+			return true;
+		}
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Node<T> findNodeToRemove(Object pattern) {
 		Node<T> current = root;
 		int compRes = 0;
 		while (current != null) {
 			compRes = comp.compare((T) pattern, current.obj);
 			if (compRes == 0) {
-				removeNode(current);
-				return true;
+				return current;
 			}
 			current = compRes > 0 ? current.right : current.left;
 		}
-		return false;
+		return null;
 	}
 
 	private void removeNode(Node<T> node) {
@@ -157,7 +169,7 @@ public class TreeSet<T> implements SortedSet<T> {
 		Node<T> minNodeForRight = getLeastNodeFrom(node.right);
 
 		if (node.parent != null) {
-			if (comp.compare(node.obj, node.parent.obj) > 0) {
+			if (comp.compare(minNodeForRight.obj, node.parent.obj) > 0) {
 				node.parent.right = minNodeForRight;
 			} else {
 				node.parent.left = minNodeForRight;
@@ -174,7 +186,7 @@ public class TreeSet<T> implements SortedSet<T> {
 		node.right = null;
 		minNodeForRight.parent = node.parent;
 		node.parent = null;
-		if (comp.compare(root.obj, node.obj) == 0) {
+		if (isRoute(node)) {
 			root = minNodeForRight;
 		}
 		size--;
@@ -185,42 +197,64 @@ public class TreeSet<T> implements SortedSet<T> {
 			if (node.parent == null) {
 				root = null;
 			} else {
-				if (comp.compare(node.obj, node.parent.obj) < 0) {
-					node.parent.left = null;
-					node.parent = null;
-				} else {
+				if (isRightOrLeftChild(node)) {
 					node.parent.right = null;
+					node.parent = null;
+
+				} else {
+					node.parent.left = null;
 					node.parent = null;
 				}
 			}
 
 		} else if (node.left != null) {
 			if (node.parent != null) {
-				if (comp.compare(node.obj, node.parent.obj) > 0) {
+				if (isRightOrLeftChild(node)) {
 					node.parent.right = node.left;
 				} else {
 					node.parent.left = node.left;
 				}
+				if (isRoute(node)) {
+					root = node.parent;
+				}
+			} else {
+				if (isRoute(node)) {
+					root = node.left;
+				}
 			}
 			node.left.parent = node.parent;
-			if (comp.compare(root.obj, node.obj) == 0) {
-				root = node.left;
-			}
+			node.parent = null;
+			node.left = null;
+
 		} else {
 			if (node.parent != null) {
-				if (comp.compare(node.obj, node.parent.obj) > 0) {
+				if (isRightOrLeftChild(node)) {
 					node.parent.right = node.right;
 				} else {
 					node.parent.left = node.right;
 				}
+				if (isRoute(node)) {
+					root = node.parent;
+				}
+			} else {
+				if (isRoute(node)) {
+					root = node.right;
+				}
 			}
 			node.right.parent = node.parent;
-			if (comp.compare(root.obj, node.obj) == 0) {
-				root = node.right;
-			}
+			node.parent = null;
+			node.right = null;
 		}
 		size--;
 
+	}
+
+	private boolean isRightOrLeftChild(Node<T> node) {
+		return comp.compare(node.obj, node.parent.obj) > 0 ? true : false;
+	}
+
+	private boolean isRoute(Node<T> node) {
+		return comp.compare(root.obj, node.obj) == 0 ? true : false;
 	}
 
 	@SuppressWarnings("unchecked")

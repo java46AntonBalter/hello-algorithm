@@ -134,7 +134,7 @@ abstract class CollectionTests {
 
 	private void fillLargeCollection() {
 		for (int i = 0; i < N_NUMBERS; i++) {
-			collection.add(i);
+			collection.add((int) Math.floor(Math.random()*(100000-(-100000)+1)+0));
 		}
 
 	}
