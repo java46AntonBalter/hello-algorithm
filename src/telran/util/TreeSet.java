@@ -69,7 +69,7 @@ public class TreeSet<T> implements SortedSet<T> {
 			}
 			boolean isJunction = isJunction(prevNode);
 			TreeSet.this.remove(prevNode.obj);
-			if(isJunction) {
+			if (isJunction) {
 				prevNode = current;
 			}
 			flNext = false;
@@ -127,8 +127,8 @@ public class TreeSet<T> implements SortedSet<T> {
 	@Override
 	public boolean remove(Object pattern) {
 		Node<T> nodeToRemove = findNodeToRemove(pattern);
-		if(nodeToRemove != null) {
-			removeNode(nodeToRemove); 
+		if (nodeToRemove != null) {
+			removeNode(nodeToRemove);
 			return true;
 		}
 		return false;
@@ -260,14 +260,10 @@ public class TreeSet<T> implements SortedSet<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean contains(Object pattern) {
-		Node<T> current = root;
-		int compRes = 0;
-		while (current != null) {
-			compRes = comp.compare((T) pattern, current.obj);
-			if (compRes == 0) {
-				return true;
-			}
-			current = compRes > 0 ? current.right : current.left;
+		Node<T> searchedNode = getNodeOrParent((T) pattern);
+		int compRes = comp.compare((T) pattern, searchedNode.obj);
+		if (compRes == 0) {
+			return true;
 		}
 		return false;
 	}
