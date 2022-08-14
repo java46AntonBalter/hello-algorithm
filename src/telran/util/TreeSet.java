@@ -67,12 +67,11 @@ public class TreeSet<T> implements SortedSet<T> {
 			if (!flNext) {
 				throw new IllegalStateException();
 			}
-			boolean isJunction = isJunction(prevNode);
-			if (isJunction) {
+			if (isJunction(prevNode)) {
 				current = getLeastNodeFrom(prevNode.right);
 			}
 			TreeSet.this.remove(prevNode.obj);
-			
+
 			flNext = false;
 		}
 
@@ -130,6 +129,7 @@ public class TreeSet<T> implements SortedSet<T> {
 		Node<T> nodeToRemove = findNodeToRemove(pattern);
 		if (nodeToRemove != null) {
 			removeNode(nodeToRemove);
+			size--;
 			return true;
 		}
 		return false;
@@ -190,7 +190,7 @@ public class TreeSet<T> implements SortedSet<T> {
 		if (isRoute(node)) {
 			root = minNodeForRight;
 		}
-		size--;
+		
 	}
 
 	private void removeNonJunctionNode(Node<T> node) {
@@ -246,7 +246,7 @@ public class TreeSet<T> implements SortedSet<T> {
 			node.parent = null;
 			node.right = null;
 		}
-		size--;
+		
 
 	}
 
