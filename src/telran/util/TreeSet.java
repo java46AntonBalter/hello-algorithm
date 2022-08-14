@@ -68,10 +68,11 @@ public class TreeSet<T> implements SortedSet<T> {
 				throw new IllegalStateException();
 			}
 			boolean isJunction = isJunction(prevNode);
-			TreeSet.this.remove(prevNode.obj);
 			if (isJunction) {
-				prevNode = current;
+				current = getLeastNodeFrom(prevNode.right);
 			}
+			TreeSet.this.remove(prevNode.obj);
+			
 			flNext = false;
 		}
 
