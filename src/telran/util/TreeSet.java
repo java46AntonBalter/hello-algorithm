@@ -29,6 +29,8 @@ public class TreeSet<T> implements SortedSet<T> {
 	}
 	private class TreeSetIterator implements Iterator<T> {
 		Node<T> current = root == null ? null : getLeastNodeFrom(root);
+		Node<T> prev = null;
+		boolean flNext = false;
 		@Override
 		public boolean hasNext() {
 			
@@ -40,8 +42,10 @@ public class TreeSet<T> implements SortedSet<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
+			prev = current;
 			T res = current.obj;
 			updateCurrent();
+			flNext = true;
 			return res;
 		}
 		private void updateCurrent() {
@@ -59,8 +63,14 @@ public class TreeSet<T> implements SortedSet<T> {
 
 		@Override
 		public void remove() {
-			//TODO
-			throw new UnsupportedOperationException();
+			if (!flNext) {
+				throw new IllegalStateException();
+			}
+			if (isJunction(prev)) {
+				current = prev;
+			}
+			removeNode(prev);
+			flNext = false;
 		}
 		
 	}
@@ -110,14 +120,60 @@ public class TreeSet<T> implements SortedSet<T> {
 	}
 	@Override
 	public boolean remove(Object pattern) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean res = false;
+		@SuppressWarnings("unchecked")
+		T patternT = (T) pattern;
+		Node<T> node = getNodeOrParent(patternT);
+		if (node != null && comp.compare(node.obj, patternT) == 0) {
+			res = true;
+			removeNode(node);
+		}
+		
+		return res;
 	}
 
+	private void removeNode(Node<T> node) {
+		if (isJunction(node)) {
+			removeJunctionNode(node);
+		} else {
+			removeNonJunctionNode(node);
+		}
+		size--;
+		
+	}
+	private void removeNonJunctionNode(Node<T> node) {
+		Node<T> child = node.left == null ? node.right : node.left;
+		Node<T> parent = node.parent;
+		if(parent == null) {
+			root = child;
+		} else {
+			if (parent.left == node) {
+				parent.left = child;
+			} else {
+				parent.right = child;
+			}
+		}
+		if (child != null) {
+			child.parent = parent;
+		}
+		
+	}
+	private void removeJunctionNode(Node<T> node) {
+		Node<T> substitution = getLeastNodeFrom(node.right);
+		node.obj = substitution.obj;
+		removeNonJunctionNode(substitution);
+		
+	}
+	private boolean isJunction(Node<T> node) {
+		
+		return node.left != null && node.right != null;
+	}
 	@Override
 	public boolean contains(Object pattern) {
-		// TODO Auto-generated method stub
-		return false;
+		@SuppressWarnings("unchecked")
+		T tPattern = (T)pattern;
+		Node<T> node = getNodeOrParent(tPattern);
+		return node != null && comp.compare(tPattern, node.obj) == 0;
 	}
 
 	@Override
