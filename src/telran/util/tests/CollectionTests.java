@@ -20,7 +20,7 @@ abstract class CollectionTests {
 
 	protected abstract Collection<Integer> createCollection();
 
-	Integer expected[] = { 10, -5, 13, 20, 40, 15, 35, 55 };
+	Integer expected[] = { 10, -5, 13, 20, 40, 15 };
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -50,14 +50,10 @@ abstract class CollectionTests {
 	@Test
 	void removeTest() {
 		int size = collection.size();
-		assertTrue(collection.remove(expected[1]));
-		assertEquals(--size, collection.size());
 		assertTrue(collection.remove(expected[0]));
 		assertEquals(--size, collection.size());
 		assertFalse(collection.remove(expected[0]));
 		assertEquals(size, collection.size());
-		assertTrue(collection.remove(expected[3]));
-		assertEquals(--size, collection.size());
 	}
 
 	@Test
@@ -134,7 +130,7 @@ abstract class CollectionTests {
 
 	private void fillLargeCollection() {
 		for (int i = 0; i < N_NUMBERS; i++) {
-			collection.add((int) Math.floor(Math.random()*(100000-(-100000)+1)+0));
+			collection.add(i);
 		}
 
 	}
