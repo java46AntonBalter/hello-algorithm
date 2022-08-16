@@ -35,7 +35,7 @@ public class TreeSetTest extends SetTests {
 	}
 	@Test
 	void lastTest() {
-		assertEquals((Integer)(-5), tree.first());
+		assertEquals((Integer)(40), tree.last());
 	}
 
 }

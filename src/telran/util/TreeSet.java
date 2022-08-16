@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import javax.naming.OperationNotSupportedException;
 
 public class TreeSet<T> implements SortedSet<T> {
 	private static class Node<T> {
@@ -83,27 +82,50 @@ public class TreeSet<T> implements SortedSet<T> {
 	}
 	@Override
 	public boolean add(T obj) {
-		Node<T> parent = getNodeOrParent(obj);
-		boolean res = false;
-		int compRes = 0;
-		if (parent == null || (compRes = comp.compare(obj, parent.obj)) != 0) {
-			//obj doesn't exist
-			Node<T> newNode = new Node<>(obj);
-			if (parent == null) {
-				//added first element that is the root
-				root = newNode;
-			} else if(compRes > 0) {
-				parent.right = newNode;
-			} else {
-				parent.left = newNode;
-			}
-			res = true;
-			newNode.parent = parent;
+		//no cycles allowed
+		Node<T> newNode = new Node<>(obj);
+		boolean res = add(root, newNode);
+		if (res) {
 			size++;
 		}
 		return res;
 	}
 
+	private boolean add(Node<T> parent, Node<T> newNode) {
+		boolean res = true;
+		if (parent == null) {
+			root = newNode;
+		} else {
+			int resComp = comp.compare(newNode.obj, parent.obj);
+			if (resComp == 0) {
+				res = false;
+			} else {
+				if (resComp < 0) {
+					if (parent.left == null) {
+						insert(parent, newNode, true);//new node inserted to left from parent
+					} else {
+						add(parent.left, newNode);
+					}
+				} else {
+					if (parent.right == null) {
+						insert(parent, newNode, false);//new node inserted to right from parent
+					} else {
+						add(parent.right, newNode);
+					}
+				}
+			}
+		}
+		return res;
+	}
+	private void insert(Node<T> parent, Node<T> newNode, boolean isLeft) {
+		if (isLeft) {
+			parent.left = newNode;
+		} else {
+			parent.right = newNode;
+		}
+		newNode.parent = parent;
+		
+	}
 	private Node<T> getNodeOrParent(T obj) {
 		Node<T> current = root;
 		Node<T> parent = null;

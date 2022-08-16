@@ -119,7 +119,7 @@ abstract class CollectionTests {
 		wrongRemove(it);
 	}
 
-	@Test
+	//@Test
 	void removeIfPerformanceTest() {
 		Predicate<Integer> predicate = new AllFalsePredicate().negate();
 		for (int i = 0; i < N_RUNS; i++) {
@@ -143,6 +143,11 @@ abstract class CollectionTests {
 			flException = true;
 		}
 		assertTrue(flException);
+	}
+	@Test
+	void emptyCollectionTest() {
+		collection = createCollection();
+		assertArrayEquals(new Integer[0], collection.toArray(new Integer[0]));
 	}
 
 }
