@@ -32,7 +32,8 @@ int count = 0;
 	void squareTest() {
 		assertEquals(4, square(2));
 		assertEquals(9, square(-3));
-		assertEquals(16, square(4));
+		assertEquals(16, square(-4));
+		assertEquals(625, square(25));
 	}
 //	private void f() {
 //		

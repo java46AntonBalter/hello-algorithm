@@ -50,13 +50,14 @@ public class LineRecursion {
 	 * @return x ^ 2
 	 */
 	public static int square(int x) {
-		if (x < 0) {
-			x = -x;
-		}
 		if (x == 0) {
 			return 0;
 		}
-		return x + (x - 1) + square(x-1);
+		if (x < 0) {
+			x = -x;
+		}
+		
+		return x + x - 1 + square(x-1);
 	}
 
 	/**
