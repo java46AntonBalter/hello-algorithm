@@ -2,6 +2,7 @@ package telran.util;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 public class LinkedList<T> implements List<T> {
 	private static class Node<T> {
@@ -251,26 +252,25 @@ public class LinkedList<T> implements List<T> {
 	 * reverse - {30, -5. 10}
 	 */
 	public void reverse() {
-		reverse(head);
+		// TODO
+		// no cycles allowed
+		if (head != null) {
+			reverse(head, tail);
+		}
+	}
+
+	private void reverse(Node<T> left, Node<T> right) {
+		if (left != right && left.prev != right) {
+			swap(left, right);
+			reverse(left.next, right.prev);
+		}
 
 	}
 
-	private Node<T> reverse(Node<T> node) {
-		   if (node == null)
-		        return null;
-		 
-		    
-		    Node<T> temp = node.next;
-		    node.next = node.prev;
-		    node.prev = temp;
-		 
-		    if (node.prev == null) {
-		    	tail = head;
-		    	head = node;
-		        return node;
-		    }    
-		 
-		    return reverse(node.prev);
+	private void swap(Node<T> left, Node<T> right) {
+		T tmp = left.obj;
+		left.obj = right.obj;
+		right.obj = tmp;
 	}
 
 }
