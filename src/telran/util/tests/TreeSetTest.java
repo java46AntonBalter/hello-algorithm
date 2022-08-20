@@ -1,5 +1,6 @@
 package telran.util.tests;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -36,6 +37,41 @@ public class TreeSetTest extends SetTests {
 	@Test
 	void lastTest() {
 		assertEquals((Integer)(40), tree.last());
+	}
+	@Test
+	void displayRotatedTest() {
+		System.out.println("*".repeat(10));
+		tree.displayRotated();
+		System.out.println("*".repeat(10));
+	}
+	@Test
+	void displayDirectoryTest() {
+		System.out.println("*".repeat(10));
+		tree.displayAsDirectory();
+		System.out.println("*".repeat(10));
+		/*
+		   10
+		     -5
+		     13
+		       20
+		         15
+		         40
+		 */
+	}
+	@Test
+	void heightTest() {
+		assertEquals(4, tree.height());
+	}
+	@Test
+	void widthTest() {
+		assertEquals(3, tree.width());
+	}
+	@Test
+	void inversionTest() {
+		tree.inversion();
+		Integer expected1[] = {40, 20, 15, 13, 10, -5};
+		assertArrayEquals(expected1, tree.toArray(new Integer[0]));
+		containsTest();
 	}
 
 }

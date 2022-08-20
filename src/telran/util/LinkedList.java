@@ -252,7 +252,7 @@ public class LinkedList<T> implements List<T> {
 	 * reverse - {30, -5. 10}
 	 */
 	public void reverse() {
-		// TODO
+		
 		// no cycles allowed
 		if (head != null) {
 			reverse(head, tail);

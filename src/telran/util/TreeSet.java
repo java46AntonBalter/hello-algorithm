@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import javax.naming.OperationNotSupportedException;
 
 public class TreeSet<T> implements SortedSet<T> {
 	private static class Node<T> {
@@ -17,6 +16,10 @@ public class TreeSet<T> implements SortedSet<T> {
 			this.obj = obj;
 		}
 	}
+
+	private static final String FILL_SYMBOL = " ";
+
+	private static final int N_SYMBOLS_PER_LEVEL = 2;
 
 	private Node<T> root;
 	int size;
@@ -232,6 +235,56 @@ public class TreeSet<T> implements SortedSet<T> {
 			node = node.right;
 		}
 		return node;
+	}
+	public void displayRotated() {
+		displayRotated(root, 0);
+	}
+	private void displayRotated(Node<T> root, int level) {
+		if (root != null) {
+			displayRotated(root.right, level + 1);
+			displayRoot(root, level);
+			displayRotated(root.left, level + 1);
+		}
+		
+	}
+	private void displayRoot(Node<T> root, int level) {
+		System.out.printf("%s%s\n",FILL_SYMBOL.repeat(level * N_SYMBOLS_PER_LEVEL), root.obj);
+		
+	}
+	public void displayAsDirectory() {
+		//TODO (see test for getting output form)
+	}
+	public int height() {
+		return height(root);
+	}
+	private int height(Node<T> root) {
+		int res = 0;
+		if (root != null) {
+			int heightLeft = height(root.left);
+			int heightRight = height(root.right);
+			res = Math.max(heightLeft, heightRight) + 1;
+		}
+		return res;
+	}
+	public int width() {
+		
+		return width(root);
+	}
+	private int width(Node<T> root) {
+		int res = 0;
+		if (root != null) {
+			res = root.left == null && root.right == null ? 1 : width(root.left)
+					+ width(root.right);
+			
+			
+		}
+		return res;
+	}
+	/**
+	 * tree inversion -  swap of left and right subtrees
+	 */
+	public void inversion() {
+		//TODO
 	}
 
 }

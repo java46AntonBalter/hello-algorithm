@@ -57,7 +57,7 @@ public static int square(int x) {
  * @return sum of all numbers from the given array
  */
 public static int sum(int ar[]) {
-	//TODO
+	
 	//no cycles
 	return sum(0, ar);
 }
