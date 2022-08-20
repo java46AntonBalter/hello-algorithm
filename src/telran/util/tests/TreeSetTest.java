@@ -49,14 +49,6 @@ public class TreeSetTest extends SetTests {
 		System.out.println("*".repeat(10));
 		tree.displayAsDirectory();
 		System.out.println("*".repeat(10));
-		/*
-		   10
-		     -5
-		     13
-		       20
-		         15
-		         40
-		 */
 	}
 	@Test
 	void heightTest() {
@@ -69,6 +61,9 @@ public class TreeSetTest extends SetTests {
 	@Test
 	void inversionTest() {
 		tree.inversion();
+		System.out.println("*".repeat(10));
+		tree.displayRotated();
+		System.out.println("*".repeat(10));
 		Integer expected1[] = {40, 20, 15, 13, 10, -5};
 		assertArrayEquals(expected1, tree.toArray(new Integer[0]));
 		containsTest();

@@ -19,7 +19,7 @@ public class TreeSet<T> implements SortedSet<T> {
 
 	private static final String FILL_SYMBOL = " ";
 
-	private static final int N_SYMBOLS_PER_LEVEL = 2;
+	private static final int N_SYMBOLS_PER_LEVEL = 3;
 
 	private Node<T> root;
 	int size;
@@ -248,11 +248,27 @@ public class TreeSet<T> implements SortedSet<T> {
 		
 	}
 	private void displayRoot(Node<T> root, int level) {
+		if(root.right != null) {
+			System.out.printf("%s" + "/\n",FILL_SYMBOL.repeat(level * N_SYMBOLS_PER_LEVEL + 2));			
+		}
 		System.out.printf("%s%s\n",FILL_SYMBOL.repeat(level * N_SYMBOLS_PER_LEVEL), root.obj);
+		if(root.left != null) {
+			System.out.printf("%s" + "\\\n",FILL_SYMBOL.repeat(level * N_SYMBOLS_PER_LEVEL + 2));			
+		}
 		
 	}
 	public void displayAsDirectory() {
-		//TODO (see test for getting output form)
+		displayAsDirectory(root, 0);
+	}
+	private void displayAsDirectory(Node<T> node, int size) {
+		if (node != null) {
+			displayNode(node, size);
+			displayAsDirectory(node.left, size + 1);
+			displayAsDirectory(node.right, size + 1);
+		}	
+	}
+	private void displayNode(Node<T> node, int size) {
+		System.out.printf("%s%s\n",FILL_SYMBOL.repeat(size * N_SYMBOLS_PER_LEVEL), node.obj);
 	}
 	public int height() {
 		return height(root);
@@ -280,11 +296,18 @@ public class TreeSet<T> implements SortedSet<T> {
 		}
 		return res;
 	}
-	/**
-	 * tree inversion -  swap of left and right subtrees
-	 */
 	public void inversion() {
-		//TODO
+		invert(root);	  
+	}
+	private Node<T> invert(Node<T> node) {
+		if (node == null) {
+			return node; 
+		}
+		Node<T> left = invert(node.left); 
+		Node<T> right = invert(node.right); 
+		node.left = right; 
+		node.right = left; 
+		return node; 
 	}
 
 }
