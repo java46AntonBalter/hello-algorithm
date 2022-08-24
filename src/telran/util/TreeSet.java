@@ -24,6 +24,7 @@ public class TreeSet<T> implements SortedSet<T> {
 	int size;
 	Comparator<T> comp;
 
+
 	private Node<T> getLeastNodeFrom(Node<T> node) {
 		while (node.left != null) {
 			node = node.left;
@@ -60,7 +61,6 @@ public class TreeSet<T> implements SortedSet<T> {
 		}
 
 		private Node<T> getGreaterParent(Node<T> node) {
-
 			while (node.parent != null && node.parent.left != node) {
 				node = node.parent;
 			}
@@ -326,6 +326,48 @@ public class TreeSet<T> implements SortedSet<T> {
 			inversion(root.right);
 		}
 
+	}
+
+	public void balance() {
+		ArrayList<Node<T>> nodeArr = new ArrayList<Node<T>>();
+		addNodesToSortedArray(root, nodeArr);
+		int arrSize = nodeArr.size();
+		balance(nodeArr, 0, arrSize - 1);
+		root.parent = null;
+		displayRotated();
+		// TODO
+		// Create sorted Node<T>[];
+		// balance creates new root for each part [left, right] of Node<T>[]
+		// root.left = balance call from left (left, rootIndex - 1)
+		// root.right = balance call from right(rootIndex + 1, right)
+		// don't forget about parent
+	}
+
+	private void addNodesToSortedArray(Node<T> root, ArrayList<Node<T>> nodeArr) {
+		if (root == null) {
+			return;
+		}
+		addNodesToSortedArray(root.left, nodeArr);
+		nodeArr.add(root);
+		addNodesToSortedArray(root.right, nodeArr);
+	}
+
+	private Node<T> balance(ArrayList<Node<T>> nodeArr, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int mid = (start + end) / 2;
+		Node<T> node = nodeArr.get(mid);
+		node.left = balance(nodeArr, start, mid - 1);
+		if (node.left != null) {
+			node.left.parent = node;
+		}
+		node.right = balance(nodeArr, mid + 1, end);
+		if (node.right != null) {
+			node.right.parent = node;
+		}
+		root = node;
+		return root;
 	}
 
 }
