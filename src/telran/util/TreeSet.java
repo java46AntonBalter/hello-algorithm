@@ -334,7 +334,6 @@ public class TreeSet<T> implements SortedSet<T> {
 		int arrSize = nodeArr.size();
 		balance(nodeArr, 0, arrSize - 1);
 		root.parent = null;
-		displayRotated();
 	}
 
 	private void addNodesToSortedArrayList(Node<T> root, ArrayList<Node<T>> nodeArr) {
