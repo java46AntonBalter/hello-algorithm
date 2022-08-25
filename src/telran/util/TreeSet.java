@@ -24,7 +24,6 @@ public class TreeSet<T> implements SortedSet<T> {
 	int size;
 	Comparator<T> comp;
 
-
 	private Node<T> getLeastNodeFrom(Node<T> node) {
 		while (node.left != null) {
 			node = node.left;
@@ -56,16 +55,11 @@ public class TreeSet<T> implements SortedSet<T> {
 		}
 
 		private void updateCurrent() {
-			current = current.right != null ? getLeastNodeFrom(current.right) : getGreaterParent(current);
+			current = getNextNode(current);
 
 		}
 
-		private Node<T> getGreaterParent(Node<T> node) {
-			while (node.parent != null && node.parent.left != node) {
-				node = node.parent;
-			}
-			return node.parent;
-		}
+		
 
 		@Override
 		public void remove() {
@@ -327,40 +321,49 @@ public class TreeSet<T> implements SortedSet<T> {
 		}
 
 	}
-
 	public void balance() {
-		ArrayList<Node<T>> nodeArr = new ArrayList<Node<T>>();
-		addNodesToSortedArrayList(root, nodeArr);
-		int arrSize = nodeArr.size();
-		balance(nodeArr, 0, arrSize - 1);
-		root.parent = null;
+		//TODO
+		//Create sorted Node<T>[];
+		//balance creates new root for each part [left, right] of Node<T>[]
+		//root.left = balance call from left (left, rootIndex - 1)
+		//root.right = balance call from right(rootIndex + 1, right)
+		//don't forget about parent
+		Node<T> [] arrayNodes = getArrayNodes();
+		root = getBalancedRoot(arrayNodes, 0, size - 1, null);
 	}
 
-	private void addNodesToSortedArrayList(Node<T> root, ArrayList<Node<T>> nodeArr) {
-		if (root == null) {
-			return;
+	private Node<T> getBalancedRoot(Node<T>[] arrayNodes, int left, int right, Node<T> parent) {
+		Node<T> root = null;
+		if (left <= right) {
+			int indexRoot = (left + right) / 2;
+			root = arrayNodes[indexRoot];
+			root.left = getBalancedRoot(arrayNodes, left, indexRoot - 1, root);
+			root.right = getBalancedRoot(arrayNodes, indexRoot + 1, right, root);
+			root.parent = parent;
 		}
-		addNodesToSortedArrayList(root.left, nodeArr);
-		nodeArr.add(root);
-		addNodesToSortedArrayList(root.right, nodeArr);
-	}
-
-	private Node<T> balance(ArrayList<Node<T>> nodeArr, int start, int end) {
-		if (start > end) {
-			return null;
-		}
-		int mid = (start + end) / 2;
-		Node<T> node = nodeArr.get(mid);
-		node.left = balance(nodeArr, start, mid - 1);
-		if (node.left != null) {
-			node.left.parent = node;
-		}
-		node.right = balance(nodeArr, mid + 1, end);
-		if (node.right != null) {
-			node.right.parent = node;
-		}
-		root = node;
 		return root;
+	}
+
+	private Node<T>[] getArrayNodes() {
+		@SuppressWarnings("unchecked")
+		Node<T> res[] = new Node[size];
+		int index = 0;
+		Node<T> current = getLeastNodeFrom(root);
+		while(current != null) {
+			res[index++] = current;
+			current = getNextNode(current);
+		}
+		return res;
+	}
+	private Node<T> getGreaterParent(Node<T> node) {
+
+		while (node.parent != null && node.parent.left != node) {
+			node = node.parent;
+		}
+		return node.parent;
+	}
+	private Node<T> getNextNode(Node<T> current) {
+		return current.right != null ? getLeastNodeFrom(current.right) : getGreaterParent(current);
 	}
 
 }

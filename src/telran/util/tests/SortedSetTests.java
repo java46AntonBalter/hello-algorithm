@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import telran.util.Collection;
 import telran.util.SortedSet;
 
 public abstract class SortedSetTests extends SetTests {
