@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class TreeSet<T> implements SortedSet<T> {
+public class TreeSet<T> extends AbstractCollection<T> implements SortedSet<T> {
 	private static class Node<T> {
 		T obj;
 		Node<T> parent;
@@ -21,7 +21,6 @@ public class TreeSet<T> implements SortedSet<T> {
 	private static final int N_SYMBOLS_PER_LEVEL = 2;
 
 	private Node<T> root;
-	int size;
 	Comparator<T> comp;
 
 	private Node<T> getLeastNodeFrom(Node<T> node) {
@@ -209,11 +208,7 @@ public class TreeSet<T> implements SortedSet<T> {
 		return node != null && comp.compare(tPattern, node.obj) == 0;
 	}
 
-	@Override
-	public int size() {
-
-		return size;
-	}
+	
 
 	@Override
 	public Iterator<T> iterator() {
@@ -322,7 +317,6 @@ public class TreeSet<T> implements SortedSet<T> {
 
 	}
 	public void balance() {
-		//TODO
 		//Create sorted Node<T>[];
 		//balance creates new root for each part [left, right] of Node<T>[]
 		//root.left = balance call from left (left, rootIndex - 1)
@@ -363,7 +357,36 @@ public class TreeSet<T> implements SortedSet<T> {
 		return node.parent;
 	}
 	private Node<T> getNextNode(Node<T> current) {
-		return current.right != null ? getLeastNodeFrom(current.right) : getGreaterParent(current);
+		return current.right != null ? getLeastNodeFrom(current.right) :
+			getGreaterParent(current);
 	}
+
+	@Override
+	public T ceiling(T pattern) {
+		Node<T> node = getNodeOrParent(pattern);
+		int compRes = comp.compare(pattern, node.obj);
+		if (compRes != 0) {
+			node = compRes > 0 ? getGreaterParent(node) : node;
+		}
+		return node == null ? null : node.obj;
+	}
+
+	@Override
+	public T floor(T pattern) {
+		Node<T> node = getNodeOrParent(pattern);
+		int compRes = comp.compare(pattern, node.obj);
+		if (compRes != 0) {
+			node = compRes < 0 ? getLessParent(node) : node;
+		}
+		return node == null ? null : node.obj;
+	}
+
+	private Node<T> getLessParent(Node<T> node) {
+		while (node.parent != null && node.parent.right != node) {
+			node = node.parent;
+		}
+		return node.parent;
+	}
+	
 
 }
