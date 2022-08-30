@@ -33,6 +33,7 @@ public abstract class SortedSetTests extends SetTests {
 	void floorTest() {
 		assertEquals((Integer)(-5), ((SortedSet<Integer>)collection).floor(-5));
 		assertEquals((Integer)(-5), ((SortedSet<Integer>)collection).floor(0));
+		assertEquals((Integer)(15), ((SortedSet<Integer>)collection).floor(16));
 		assertNull(((SortedSet<Integer>)collection).floor(-6));
 	}
 	

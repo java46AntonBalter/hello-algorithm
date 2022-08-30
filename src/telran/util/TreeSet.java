@@ -363,7 +363,11 @@ public class TreeSet<T> extends AbstractCollection<T> implements SortedSet<T> {
 
 	@Override
 	public T ceiling(T pattern) {
+		if (root == null) {
+			return null;
+		}
 		Node<T> node = getNodeOrParent(pattern);
+		
 		int compRes = comp.compare(pattern, node.obj);
 		if (compRes != 0) {
 			node = compRes > 0 ? getGreaterParent(node) : node;
@@ -373,6 +377,9 @@ public class TreeSet<T> extends AbstractCollection<T> implements SortedSet<T> {
 
 	@Override
 	public T floor(T pattern) {
+		if (root == null) {
+			return null;
+		}
 		Node<T> node = getNodeOrParent(pattern);
 		int compRes = comp.compare(pattern, node.obj);
 		if (compRes != 0) {
