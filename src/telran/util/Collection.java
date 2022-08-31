@@ -86,7 +86,7 @@ public interface Collection<T> extends Iterable<T> {
 		removeIf(n->true);
 	}
 	default T[] toShuffleArray(T[] array) {
-		ArrayList<T> tempList  = new ArrayList<T>();
+		ArrayList<T> tempList  = new ArrayList<T>(array.length);
 		new Random().ints(0, array.length).distinct().limit(array.length).forEach(n -> tempList.add(array[n]));
 		return tempList.toArray(Arrays.copyOf(array, array.length));
 	}
