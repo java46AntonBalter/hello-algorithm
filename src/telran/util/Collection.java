@@ -86,8 +86,13 @@ public interface Collection<T> extends Iterable<T> {
 		removeIf(n->true);
 	}
 	default T[] toShuffleArray(T[] array) {
-		ArrayList<T> tempList  = new ArrayList<T>(array.length);
-		new Random().ints(0, array.length).distinct().limit(array.length).forEach(n -> tempList.add(array[n]));
-		return tempList.toArray(Arrays.copyOf(array, array.length));
+		final T[] arraySh = toArray(array);
+		final int index[] = {0};
+		final T[] arrayCopy = Arrays.copyOf(arraySh, arraySh.length);
+		//shuffling means random order of the array elements
+		new Random().ints(0, arrayCopy.length).distinct().limit(arrayCopy.length)
+		.forEach(i -> arraySh[index[0]++] = arrayCopy[i]);
+		//apply stream one code line. Hint: see SportLoto application
+		return arraySh;
 	}
 }

@@ -171,7 +171,7 @@ abstract class CollectionTests {
 	void shuffleTest() {
 		int size = collection.size();
 		Integer array[] = collection.toArray(new Integer[0]);
-		Integer arraySh [] = collection.toShuffleArray(array);
+		Integer arraySh [] = collection.toShuffleArray(new Integer[0]);
 		assertFalse(Arrays.equals(array, arraySh));
 		collection = new HashSet<Integer>();
 		fillCollection(arraySh);
@@ -182,11 +182,13 @@ abstract class CollectionTests {
 		assertEquals(93, collection.stream().mapToInt(x -> x).sum());
 		assertArrayEquals(new Integer[] {-5}, collection.stream()
 				.filter(n -> n < 0).toArray(size -> new Integer[size]));
-		IntSummaryStatistics stats = collection.stream().mapToInt(x -> x).summaryStatistics();
-		int min = stats.getMin();
-		int max = stats.getMax();
-		assertEquals(-5, min);
-		assertEquals(40, max);
+		
+		//for only one stream method call to find out 
+		// minimal and maximal values of any collection
+		//Hint: Using IntStream
+		IntSummaryStatistics summary = collection.stream().mapToInt(x -> x).summaryStatistics();
+		assertEquals(-5, summary.getMin());
+		assertEquals(40, summary.getMax());
 	}
 
 }
